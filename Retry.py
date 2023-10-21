@@ -249,8 +249,8 @@ def get_data(links):
 
             # print(f'We are currently at: {} link')
             # List of lists to iterate through
-            lists_to_iterate = [All_Facilities, location, Building_Name, Builder_Name, location_advantages,
-                                Description, property_data]
+            lists_to_iterate = [All_Facilities.copy(), location.copy(), Building_Name.copy(), Builder_Name.copy(), location_advantages.copy(),
+                                Description.copy(), property_data.copy()]
             # Iterate through the lists and create property dictionaries
             for data_points in zip(*lists_to_iterate):
                 print(data_points[0])
