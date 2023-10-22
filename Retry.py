@@ -263,6 +263,7 @@ def get_data(links):
                     'Property Data': lists_to_iterate[6]
                 }
             property_data_list.append(property_dict)
+            # print(property_dict)
             Main_data=Main_data.append(property_dict,ignore_index=True)
 
 
@@ -288,13 +289,13 @@ def get_data(links):
     # to_csv(property_data_list)
     file_name=input('Enter File Name(dont include .csv):\n')
     version=1
-    while os.path.isfile(file_name):
+    while os.path.isfile(f'{file_name}_{version}.csv'):
         version+=1
-        Main_data.to_csv(f'{file_name}{version}.csv',index=False)
+    Main_data.to_csv(f'{file_name}_{version}.csv',index=False)
 
 
 
-def to_csv(data_list):
+def m_to_csv(data_list):
     # Create a DataFrame from the list of dictionaries
     Main = pd.DataFrame(data_list)
 
