@@ -43,6 +43,7 @@ def proxy_mesh():
 
 
 def get_data(links):
+    Main_data=pd.DataFrame()
     location = []
     All_Facilities = []
     Description = []
@@ -252,19 +253,17 @@ def get_data(links):
             lists_to_iterate = [All_Facilities.copy(), location.copy(), Building_Name.copy(), Builder_Name.copy(), location_advantages.copy(),
                                 Description.copy(), property_data.copy()]
             # Iterate through the lists and create property dictionaries
-            for data_points in zip(*lists_to_iterate):
-                print(data_points[0])
-                print(data_points[4])
-                property_dict = {
-                    "All Facilities": data_points[0],
-                    "Location": data_points[1],
-                    "Building Name": data_points[2],
-                    "Builder Name": data_points[3],
-                    "Location Advantages": data_points[4],
-                    "Description": data_points[5],
-                    'Property Data': data_points[6]
+            property_dict = {
+                    "All Facilities": lists_to_iterate[0],
+                    "Location": lists_to_iterate[1],
+                    "Building Name": lists_to_iterate[2],
+                    "Builder Name": lists_to_iterate[3],
+                    "Location Advantages": lists_to_iterate[4],
+                    "Description": lists_to_iterate[5],
+                    'Property Data': lists_to_iterate[6]
                 }
-                property_data_list.append(property_dict)
+            property_data_list.append(property_dict)
+            Main_data=Main_data.append(property_dict,ignore_index=True)
 
 
 
@@ -286,7 +285,13 @@ def get_data(links):
         except Exception as e:
             print(f"Error occurred:{e}")
         # print(property_data_list)
-    to_csv(property_data_list)
+    # to_csv(property_data_list)
+    file_name=input('Enter File Name(dont include .csv):\n')
+    version=1
+    while os.path.isfile(file_name):
+        version+=1
+        Main_data.to_csv(f'{file_name}{version}.csv',index=False)
+
 
 
 def to_csv(data_list):
@@ -303,3 +308,6 @@ if __name__ == '__main__':
         with open(file, 'r') as f:
             urls = [line.strip() for line in f.readlines()]
         property_data_list = get_data(urls)
+    else:
+        print('Get the file')
+
