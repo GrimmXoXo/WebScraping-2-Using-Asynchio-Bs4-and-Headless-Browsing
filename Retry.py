@@ -1,12 +1,12 @@
-import os.path
+import os
 import proxy_extract
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-
+import time
 request = 0
 Placeholder = None
-import time
+
 
 headers = {
     'authority': 'www.99acres.com',
@@ -43,17 +43,9 @@ def proxy_mesh():
 
 
 def get_data(links):
+    global request
     Main_data=pd.DataFrame()
-    location = []
-    All_Facilities = []
-    Description = []
-
-    Builder_Name = []
-    Building_Name = []
-
-    property_data = []
-    location_advantages = []
-
+    
     proxies = proxy_mesh()
     counter = 0
     # Detail Page -Link start
@@ -67,13 +59,23 @@ def get_data(links):
 
         counter += 1
         print(f'We are on Link{counter}')
-        global request
+        
         session = requests.Session()
-        # if request>=2:
-        #     print("Sleeping for 2 sec......")
-        #     time.sleep(2)
-        #     request=0
+        if request>=3:
+            print("Sleeping for 2 sec......")
+            time.sleep(2)
+            request=0
         try:
+            location = []
+            All_Facilities = []
+            Description = []
+
+            Builder_Name = []
+            Building_Name = []
+
+            property_data = []
+            location_advantages = []
+
             print(link)
             page = session.get(link, headers=headers, proxies={'http': proxies[index_proxy]})
             proxy_counter += 1
@@ -150,8 +152,8 @@ def get_data(links):
                 completion_date = completion_date_element.text.strip() if completion_date_element else Placeholder
 
             except Exception as e:
-                # print(f"An error occurred while extracting construction status and completion date: {e}")
-                pass
+                print(f"An error occurred while extracting construction status and completion date: {e}")
+
 
                 # Continue with Placeholder values
 
@@ -262,7 +264,9 @@ def get_data(links):
                     "Description": lists_to_iterate[5],
                     'Property Data': lists_to_iterate[6]
                 }
+            print(lists_to_iterate[4])
             property_data_list.append(property_dict)
+            # print(property_dict)
             Main_data=Main_data.append(property_dict,ignore_index=True)
 
 
@@ -288,13 +292,13 @@ def get_data(links):
     # to_csv(property_data_list)
     file_name=input('Enter File Name(dont include .csv):\n')
     version=1
-    while os.path.isfile(file_name):
+    while os.path.isfile(f'{file_name}_{version}.csv'):
         version+=1
-        Main_data.to_csv(f'{file_name}{version}.csv',index=False)
+    Main_data.to_csv(f'{file_name}_{version}.csv',index=False)
 
 
 
-def to_csv(data_list):
+def m_to_csv(data_list):
     # Create a DataFrame from the list of dictionaries
     Main = pd.DataFrame(data_list)
 
