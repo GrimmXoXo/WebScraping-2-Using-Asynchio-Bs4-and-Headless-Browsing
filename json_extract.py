@@ -60,7 +60,7 @@ def extract_all_url(city=12):
                     print("Error: 'landingPage' or 'url' key not found.")
                     continue
     except Exception as e:
-    print(f"Error occurred: {e}")
+        print(f"Error occurred: {e}")
     # Handle other exceptions here if needed
 
 
