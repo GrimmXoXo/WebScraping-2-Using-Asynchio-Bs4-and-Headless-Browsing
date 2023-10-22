@@ -1,2 +1,4 @@
 _1.csv
 Test.ipynb
+.ipynb_checkpoints/
+__pycache__/
