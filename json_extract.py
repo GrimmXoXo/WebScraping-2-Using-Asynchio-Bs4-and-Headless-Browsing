@@ -45,19 +45,24 @@ def extract_all_url(city=12):
         json_url = f"https://www.99acres.com/api-aggregator/discovery/srp/search?area_unit=1&platform=DESKTOP&moduleName=GRAILS_SRP&workflow=GRAILS_SRP&page_size=25&page={page}&city={city}&preference=S&res_com=R&seoUrlType=DEFAULT&recomGroupType=VSP&pageName=SRP&groupByConfigurations=true&lazy=true"
         a = extract(json_url)
 
-        try:
-            for i in range(len(a['properties'])):
+    try:
+        for i in range(len(a['properties'])):
+            try:
+                b = 'https://www.99acres.com/' + a['properties'][i]['PROP_DETAILS_URL']
+                all_url.append(b)
+            except KeyError:
                 try:
-                    b = 'https://www.99acres.com/' + a['properties'][i]['PROP_DETAILS_URL']
-                    all_url.append(b)
-                except KeyError:
                     b = a['properties'][i]['landingPage']['url']
                     all_url.append(b)
-        except KeyError:
-            continue
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            continue
+                except KeyError:
+                    # Handle the situation where 'landingPage' key or 'url' key does not exist
+                    # You can raise a custom exception, log a message, or perform any other appropriate action.
+                    print("Error: 'landingPage' or 'url' key not found.")
+                    continue
+    except Exception as e:
+    print(f"Error occurred: {e}")
+    # Handle other exceptions here if needed
+
 
     print("Extraction completed.")
     return all_url
