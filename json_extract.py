@@ -1,6 +1,8 @@
 from selenium import webdriver
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from fake_useragent import UserAgent
 import json
@@ -22,14 +24,14 @@ def extract(url):
 
     driver = webdriver.Chrome(service=service,
                               options=chrome_options)  # Now we can use 'driver' to interact with the web page
-
+    driver.delete_all_cookies()
     driver.get(url)
 
     # time.sleep(5) #Just incase we want to delay for page to render
-
-    # Get the WebElement containing the JSON content
-    json_element = driver.find_element(by=By.XPATH, value='/html/body')
-
+    # Wait for the presence of the JSON element using ExpectedConditions (maximum wait time: 10 seconds)
+    json_element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, '/html/body'))
+    )
     # Get the text content of the WebElement
     json_content = json_element.text
 
@@ -39,8 +41,9 @@ def extract(url):
     return json_data
 
 
-def extract_all_url(city=12):
+def extract_all_url(city=12,end_page=2837):
     """It extracts all the URL from the JSON of the site. Give the city number which you want to extract; check that in the site, you can find them in the network tab."""
+    global page
     path_to_save_start=fr'{os.getcwd()}/Miscellaneous/start.txt'
 
     # Create the directory if it does not exist
@@ -54,7 +57,7 @@ def extract_all_url(city=12):
     else:
         start_value = 1
 
-    for page in range(start_value, 2589):
+    for page in range(start_value, end_page):
         print(f'we are on page {page}')
         json_url = f"https://www.99acres.com/api-aggregator/discovery/srp/search?area_unit=1&platform=DESKTOP&moduleName=GRAILS_SRP&workflow=GRAILS_SRP&page_size=25&page={page}&city={city}&preference=S&res_com=R&seoUrlType=DEFAULT&recomGroupType=VSP&pageName=SRP&groupByConfigurations=true&lazy=true"
         a = extract(json_url)
@@ -85,12 +88,18 @@ def extract_all_url(city=12):
 
         # Handle other exceptions here if needed
 
-        print("Extraction completed.")
+    with open('all_url.txt', 'a') as f:
+        for m in all_url:
+            f.write(m + '\n')
+    with open(path_to_save_start, 'w') as s:
+        s.write(str(page))
     return all_url
 
 
 if __name__ == '__main__':
-    e = extract_all_url()
-    with open('all_url2.txt', 'a') as file:
-        for i in e:
-            file.write(i + '\n')
+    try:
+        e = extract_all_url()
+        print('Execution done')
+    except Exception as e:
+        print(f'Error occurred {e}')
+
