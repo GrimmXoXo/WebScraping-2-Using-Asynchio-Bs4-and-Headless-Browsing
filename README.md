@@ -45,6 +45,7 @@ This script extracts 300 proxies available for free on a proxy website and provi
 
 ## Note
 
+- For privacy and security reasons, the specific website URL has been removed from the scripts and documentation. Ensure you replace the placeholders with the actual website URLs before running the scripts.
 - Ensure you comply with the website's terms of service and legal regulations while scraping.
 - Regularly check and update the list of proxies for optimal performance.
 
