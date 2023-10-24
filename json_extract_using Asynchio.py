@@ -15,7 +15,7 @@ async def main(city_number=12):
     all_url = []
 
     # Base URL for the API endpoint
-    base_url = "https://www.99acres.com/api-aggregator/discovery/srp/search"
+    base_url = ""
 
     # List to store asynchronous tasks for fetching JSON data
     tasks = []
