@@ -66,7 +66,7 @@ def extract_all_url(city=12,end_page=2837):
         try:
             for properties_urls in range(len(a['properties'])):
                 try:
-                    b = 'https://www.99acres.com/' + a['properties'][properties_urls]['PROP_DETAILS_URL']
+                    b = '' + a['properties'][properties_urls]['PROP_DETAILS_URL']
                     all_url.append(b)
                 except KeyError:
                     try:
