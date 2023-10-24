@@ -63,7 +63,7 @@ async def fetch_data(link,proxy):
     global request
     property_data_list = []
 
-    async with aiohttp.ClientSession(headers=headers) as session:
+    async with aiohttp.ClientSession(headers=headers,trust_env = True) as session:
 
         async with session.get(link, headers=headers,proxy=proxy) as response:
             html_content = await response.text()
@@ -217,9 +217,19 @@ async def fetch_data(link,proxy):
             print(property_data_list)
 
 
-async def get_data_async(urls, uses_per_proxy=9):
-    proxy_mesh_list=proxy_mesh()
-    print(proxy_mesh_list)
+async def get_data_async(urls, uses_per_proxy=900,Proxy_list):
+        """ Urls: list of urls which you want to scrape
+            uses_per_proxy: DEFAULT=900; this means that from the list of proxies, how many times do you need to use 1 proxy
+            Example if total proxies you can get in proxy mesh
+            Proxy_list: Send the list of proxies which you are using, I created a function named proxy mesh in which 300 proxies are stored and refreshed every 10 minutes.
+            To use proxy_mesh function->
+                proxy_mesh_list=proxy_mesh()
+                and then pass this proxy_mesh as an argument inside this function  
+
+            Error: Using Asynchronous Requests to speed up the process of data gathering but it didnt work because the proxies which i was trying to use to get the data were Public and limited
+            The error the script is encountering is aiohttp.client_exceptions.ClientProxyConnectionError: Cannot connect to host {ip here} ssl:default [An operation on a socket could not be performed because the system lacked sufficient buffer space or because a queue was full]
+            What i feel like this means either my machine didnt have the capacity to perform operations asynch(i had 70k urls) or either the new client i.e proxy was ratelimiting my access to the parallalization
+            In either case we can just use the headless browser with requests and get it done albeit slow."""
     proxy_usage_counts = {proxy : uses_per_proxy for proxy in proxy_mesh_list}
     tasks = []
     # print(proxy_usage_counts['proxy'][0])
@@ -238,14 +248,15 @@ async def get_data_async(urls, uses_per_proxy=9):
 
 if __name__ == '__main__':
     # file = input('Enter the location of the file where you stored the urls in txt\n')
-    file = r"urls_all.txt"
+    proxy_mesh_list=proxy_mesh()
+    file = r"all_url.txt"
     if os.path.exists(file):
         with open(file, 'r') as f:
             urls = [line.strip() for line in f.readlines()]
 
     request = 0  # Initialize request count
     loop = asyncio.get_event_loop()
-    data = loop.run_until_complete(get_data_async(urls))
+    data = loop.run_until_complete(get_data_async(urls,Proxy_list=proxy_mesh_list))
     loop.close()
 
 
