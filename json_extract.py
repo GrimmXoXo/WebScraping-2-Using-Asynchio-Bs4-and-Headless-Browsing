@@ -10,6 +10,7 @@ import os
 import sys
 from webdriver_manager.chrome import ChromeDriverManager
 user_agent=UserAgent()
+input_url=''
 
 def extract(url):
     '''Enter the URL for Json'''
@@ -59,13 +60,13 @@ def extract_all_url(city=12,end_page=2837):
 
     for page in range(start_value, end_page):
         print(f'we are on page {page}')
-        json_url = f"https://www.99acres.com/api-aggregator/discovery/srp/search?area_unit=1&platform=DESKTOP&moduleName=GRAILS_SRP&workflow=GRAILS_SRP&page_size=25&page={page}&city={city}&preference=S&res_com=R&seoUrlType=DEFAULT&recomGroupType=VSP&pageName=SRP&groupByConfigurations=true&lazy=true"
+        json_url = f"{input_url}"
         a = extract(json_url)
 
         try:
             for properties_urls in range(len(a['properties'])):
                 try:
-                    b = 'https://www.99acres.com/' + a['properties'][properties_urls]['PROP_DETAILS_URL']
+                    b = '' + a['properties'][properties_urls]['PROP_DETAILS_URL']
                     all_url.append(b)
                 except KeyError:
                     try:

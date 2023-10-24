@@ -15,7 +15,7 @@ async def main(city_number=12):
     all_url = []
 
     # Base URL for the API endpoint
-    base_url = "https://www.99acres.com/api-aggregator/discovery/srp/search"
+    base_url = ""
 
     # List to store asynchronous tasks for fetching JSON data
     tasks = []
@@ -40,7 +40,7 @@ async def main(city_number=12):
             for property_data in response.get('properties', []):
                 try:
                     # Extract the property URL from JSON data
-                    b = 'https://www.99acres.com/' + property_data['PROP_DETAILS_URL']
+                    b = '' + property_data['PROP_DETAILS_URL']
                 except KeyError:
                     # If the expected key is not present, extract URL from 'landingPage' or use an empty string
                     b = property_data.get('landingPage', {}).get('url', '')
